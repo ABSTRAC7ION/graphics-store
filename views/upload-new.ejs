@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+  <!--GOOGLE FONT-->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet" />
+  <!--CDN-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+  <!--uploadCare-->
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+  <script src="https://ucarecdn.com/libs/widget-tab-effects/1.x/uploadcare.tab-effects.lang.en.min.js"></script>
+  <style>
+    .uploadcare--widget__button.uploadcare--widget__button_type_open {
+      background-color: #0d6efd;
+    }
+  </style>
+  <script>
+    uploadcare.registerTab("preview", uploadcareTabEffects);
+    UPLOADCARE_LOCALE_TRANSLATIONS = {
+      buttons: {
+        choose: {
+          files: {
+            one: "Upload New Image",
+          },
+        },
+      },
+    };
+  </script>
+  <!--stylesheet link-->
+  <script src="https://kit.fontawesome.com/6b4b5cfca8.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+  <!--NavBar-->
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Poster Mania</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#products">Browse</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#genres">Genres</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#artists">Artists</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <button class="btn btn-outline-secondary right-side" role="search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
+              viewBox="0 0 16 16">
+              <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+            </svg>
+          </button>
+          <a class="right-side" href="/cart">
+            <button class="cart btn btn-outline-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart"
+                viewBox="0 0 16 16">
+                <path
+                  d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+              </svg>
+              <% if (session.cart) { %>
+                <span class=""><sup>
+                    <%= session.cart.totalQnty %>
+                  </sup></span>
+                <% } %>
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--forum-->
+
+  <div class="flex-center">
+    <form class="form" method="POST" action="/new" autocomplete="off">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" placeholder="give a creative name for your artwork" name="name"
+          required />
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlSelect1">Genre</label>
+        <select class="form-control" id="exampleFormControlSelect1" name="genre" required>
+          <option value="" hidden>Chose...</option>
+          <option value="Abstract">Abstract</option>
+          <option value="Dark">Dark</option>
+          <option value="Digital-Art">Digital Art</option>
+          <option value="Fantasy">Fantasy</option>
+          <option value="Horror">Horror</option>
+          <option value="Merch">Merch</option>
+          <option value="Movies">Movies</option>
+          <option value="Motivational">Motivational</option>
+          <option value="Rap">Rap</option>
+          <option value="Sci-Fi">Sci-Fi</option>
+          <option value="Series">Series</option>
+          <option value="Sport">Sports</option>
+          <option value="Pop-Art">Pop Art</option>
+          <option value="other">other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Description</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="description" required></textarea>
+      </div>
+      <input type="hidden" role="uploadcare-uploader" name="file" data-public-key="93f085c30abb15087f87"
+        data-tabs="file gdrive gphotos instagram" data-effects="crop, rotate, enhance, mirror, flip"
+        data-crop="1:1, 4:3, 3:4 " data-clearable="true" required />
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  <h6 class="center error">
+    <%= typeof msg !='undefined' ? msg : '' %>
+  </h6>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</body>
+
+</html>

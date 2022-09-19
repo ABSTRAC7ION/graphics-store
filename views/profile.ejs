@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@<%= user.username %>
+    </title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <!--GOOGLE FONT-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet" />
+    <!--CDN-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <!--stylesheet link-->
+    <script src="https://kit.fontawesome.com/6b4b5cfca8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+    <div class="bg-white">
+        <!---nav--->
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Poster Mania</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex">
+                        <a class="nav-link right-side" href="/new">
+                            <button class="btn btn-outline-success">upload new design</button>
+                        </a>
+                        <a class="right-side" href="/cart">
+                            <button class="cart btn btn-outline-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                </svg>
+                                <% if (session.cart) { %>
+                                    <span class=""><sup>
+                                            <%= session.cart.totalQnty %>
+                                        </sup></span>
+                                    <% } %>
+                            </button>
+                        </a>
+                        <h6>hi <%= user.username %>
+                        </h6>
+                        <a href="/log-out">
+                            <button class="btn btn-outline-danger">
+                                Logout
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <% if (currentUser.username !==user.username) { %>
+            <h1>
+                <%= user.username %>
+            </h1>
+            <h5>
+                <%= user.creations.length %> posts
+            </h5>
+            <div class="container">
+                <div class="flex-row">
+                    <% for(let i=0 ; i < user.creations.length; i++){ %>
+                        <div class="product">
+                            <div class="imgs-product">
+                                <img src="/images/IMG_bg.avif" alt="background" class="img-bg">
+                                <img src="<%= user.creations[i].image%>" class="img-fluid img-product" />
+                                <img src="/images/clip-front.png" alt="clips" class="img-front">
+
+                                <div class="overlay">
+                                    <div class="overlay-btn">
+                                        <a href="/add-to-likes/<%= user.creations[i]._id %>" class="no-highlight">
+                                            <button type="button" class="circle-btn">
+                                                <i class="fa fa-regular fa-heart"></i>
+                                            </button>
+                                        </a>
+                                        <a href="/add-to-cart/<%= user.creations[i]._id %>" class="no-highlight">
+                                            <button type="button" class="circle-btn" id="cart-btn">
+                                                <i class="fa fa-regular fa-cart-plus"></i>
+                                            </button>
+                                        </a>
+                                    </div>
+
+                                    <a href="product/<%= user.creations[i]._id %>" class="img-fluid img-product">
+                                        <img src="<%= user.creations[i].image%>" class="img-href" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-info">
+                                <a href="product/<%= user.creations[i]._id %>">
+                                    <h5>
+                                        <%= user.creations[i].name %>
+                                    </h5>
+                                </a>
+                                <h5 class="price">
+                                    <a href="product/<%= user.creations[i]._id %>" class="no-highlight">
+                                        <sup class="sup">EGP</sup>
+                                        <%= user.creations[i].price %>
+                                    </a>
+                                </h5>
+                            </div>
+                        </div>
+                        <% } %>
+                </div>
+                <% } else { %>
+                    <h1>
+                        <%= user.username %>
+                    </h1>
+                    <a href="/account/edit/"><button class="btn btn-outline-success">edit profile <i
+                                class="fas fa-solid fa-pen"></i> </button></a>
+                    <h5>
+                        <%= user.creations.length %> posts
+                    </h5>
+                    <div class="container">
+                        <div class="flex-row">
+                            <% for(let i=0 ; i < user.creations.length; i++){ %>
+                                <div class="product">
+                                    <div class="imgs-product">
+                                        <img src="/images/IMG_bg.avif" alt="background" class="img-bg">
+                                        <img src="<%= user.creations[i].image%>" class="img-fluid img-product" />
+                                        <img src="/images/clip-front.png" alt="clips" class="img-front">
+
+                                        <div class="overlay">
+                                            <div class="overlay-btn">
+                                                <a href="/add-to-likes/<%= user.creations[i]._id %>"
+                                                    class="no-highlight">
+                                                    <button type="button" class="circle-btn">
+                                                        <i class="fa fa-regular fa-heart"></i>
+                                                    </button>
+                                                </a>
+                                                <a href="/add-to-cart/<%= user.creations[i]._id %>"
+                                                    class="no-highlight">
+                                                    <button type="button" class="circle-btn" id="cart-btn">
+                                                        <i class="fa fa-regular fa-cart-plus"></i>
+                                                    </button>
+                                                </a>
+                                                <a href="/" class="no-highlight">
+                                                    <button type="button" class="circle-btn" id="cart-btn">
+                                                        <i class="far fa-edit"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
+
+                                            <a href="product/<%= user.creations[i]._id %>"
+                                                class="img-fluid img-product">
+                                                <img src="<%= user.creations[i].image%>" class="img-href" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-info">
+                                        <a href="product/<%= user.creations[i]._id %>">
+                                            <h5>
+                                                <%= user.creations[i].name %>
+                                            </h5>
+                                        </a>
+                                        <h5 class="price">
+                                            <a href="product/<%= user.creations[i]._id %>" class="no-highlight">
+                                                <sup class="sup">EGP</sup>
+                                                <%= user.creations[i].price %>
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <% } %>
+                        </div>
+                        <% } %>
+
+
+                            <!--bootstrap-->
+                            <script
+                                src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+                                integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+                                crossorigin="anonymous"></script>
+                            <script
+                                src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+                                integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+                                crossorigin="anonymous"></script>
+                            <!--jquery-->
+                            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                            <script
+                                src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+</body>
+
+</html>
