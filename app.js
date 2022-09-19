@@ -5,7 +5,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var session = require("express-session");
-var MongoStore = require("connect-mongo");
+var MongoStore = require("connect-mongo").default;
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -29,14 +29,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
-    secret: SECRET,
-    saveUninitialized: false,
-    resave: false, 
     store: MongoStore.create({
       mongoUrl:
         MONGO_DB,
       ttl: 2 * 24 * 60 * 60,
     }),
+    secret: SECRET,
+    saveUninitialized: false,
+    resave: false
   })
 );
 
