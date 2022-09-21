@@ -5,7 +5,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var session = require("express-session");
-var MongoStore = require("connect-mongo").default;
+var MongoStore = require("connect-mongo");
 const dotenv = require("dotenv");
 dotenv.config();
 
