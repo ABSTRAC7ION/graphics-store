@@ -5,14 +5,11 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var session = require("express-session");
-var MongoStore = require("connect-mongo").default;
+var MongoStore = require("connect-mongo");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const {
-  MONGO_DB,
-  SECRET
-  } = process.env;
+const { MONGO_DB, SECRET } = process.env;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -30,13 +27,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl:
-        MONGO_DB,
+      mongoUrl: MONGO_DB,
       ttl: 2 * 24 * 60 * 60,
     }),
     secret: SECRET,
     saveUninitialized: false,
-    resave: false
+    resave: false,
   })
 );
 
@@ -54,7 +50,7 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};

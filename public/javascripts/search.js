@@ -1,40 +1,35 @@
 /* global instantsearch algoliasearch */
 import { dontev } from "dotenv";
 dontev.config();
-import algoliasearch from 'algoliasearch/lite';
-import instantsearch from 'instantsearch.js';
-import { searchBox, hits } from 'instantsearch.js/es/widgets';
+import algoliasearch from "algoliasearch/lite";
+import instantsearch from "instantsearch.js";
+import { searchBox, hits } from "instantsearch.js/es/widgets";
 
-const {
-  ALGOLIA_APP_ID,
-  ALGOLIA_API_KEY,
-  ALGOLIA_INDEX_NAME,
-} = process.env;
+const { ALGOLIA_APP_ID, ALGOLIA_API_KEY, ALGOLIA_INDEX_NAME } = process.env;
 
-
-const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
+const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
 
 const search = instantsearch({
   indexName: ALGOLIA_INDEX_NAME,
-  searchClient
+  searchClient,
 });
 
 search.addWidgets([
   searchBox({
-    container: '#searchbox',
+    container: "#searchbox",
   }),
   instantsearch.widgets.stats({
-    container: '#stats',
+    container: "#stats",
   }),
   instantsearch.widgets.clearRefinements({
-    container: '#clear-refinements',
+    container: "#clear-refinements",
   }),
   instantsearch.widgets.refinementList({
-    container: '#genre-list',
-    attribute: 'genre',
+    container: "#genre-list",
+    attribute: "genre",
   }),
   instantsearch.widgets.hits({
-    container: '#hits',
+    container: "#hits",
     templates: {
       item: `
                   <div class="product">
@@ -84,13 +79,12 @@ search.addWidgets([
                         </a>
                     </div>
                   </div>
-        `
+        `,
     },
   }),
   instantsearch.widgets.pagination({
-    container: '#pagination',
+    container: "#pagination",
   }),
-
 ]);
 
 search.start();

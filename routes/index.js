@@ -5,7 +5,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
-const { check, validationResult } = require('express-validator');
+const { check, validationResult } = require("express-validator");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -24,18 +24,13 @@ router.use(function (req, res, next) {
 const product = require("../models/product");
 const User = require("../models/user");
 const cartIm = require("../models/cart");
-const likes = require("../models/likes");
+
 const { error } = require("console");
-const { request } = require("http");
-const { format } = require("path");
 
 //connect to DB
-const {
-MONGO_DB
-} = process.env;
+const { MONGO_DB } = process.env;
 
-const mongoUri =
-  MONGO_DB;
+const mongoUri = MONGO_DB;
 mongoose.connect(mongoUri, (err) => {
   if (err) console.log(err);
 });
@@ -57,14 +52,13 @@ passport.use(
           return done(null, false, { message: "Incorrect username or email" });
         }
         console.log(user);
-        bcrypt.compare(password, user.password
-          , (err, res) => {
-            if (res) {
-              return done(null, user)
-            } else {
-              return done(null, false, { message: "Incorrect password" })
-            }
-          })
+        bcrypt.compare(password, user.password, (err, res) => {
+          if (res) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "Incorrect password" });
+          }
+        });
       });
     } else {
       User.findOne({ username: username }, (err, user) => {
@@ -75,14 +69,13 @@ passport.use(
           return done(null, false, { message: "Incorrect username or email" });
         }
         console.log(user);
-        bcrypt.compare(password, user.password
-          , (err, res) => {
-            if (res) {
-              return done(null, user)
-            } else {
-              return done(null, false, { message: "Incorrect password" })
-            }
-          })
+        bcrypt.compare(password, user.password, (err, res) => {
+          if (res) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "Incorrect password" });
+          }
+        });
       });
     }
   })
@@ -102,7 +95,7 @@ router.post(
   "/log-in",
   passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/"
+    failureRedirect: "/",
   })
 );
 
@@ -111,7 +104,7 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.get("/log-out", (req, res) => {
+router.get("/log-out", (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
@@ -122,7 +115,6 @@ router.get("/log-out", (req, res) => {
 
 //retrieve collections from db
 router.get("/", function (req, res) {
-
   product.find({}, async function (err, products) {
     if (err) {
       throw err;
@@ -136,94 +128,96 @@ router.get("/", function (req, res) {
   });
 });
 
-
 //sign-up
-router.get("/sign-up", (req, res) => res.render("sign-up-form", { errors: null }));
+router.get("/sign-up", (req, res) =>
+  res.render("sign-up-form", { errors: null })
+);
 
-router.post("/sign-up", [
-  //check email
-  check('email')
-    .not()
-    .isEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Invalid Email')
-    .custom((value, { req }) => {
-      return new Promise((resolve, reject) => {
-        User.findOne({ email: req.body.email }, function (err, user) {
-          if (err) {
-            reject(new Error('Server Error'))
-          }
-          if (Boolean(user)) {
-            reject(new Error('E-mail already in use'))
-          }
-          resolve(true)
+router.post(
+  "/sign-up",
+  [
+    //check email
+    check("email")
+      .not()
+      .isEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Invalid Email")
+      .custom((value, { req }) => {
+        return new Promise((resolve, reject) => {
+          User.findOne({ email: req.body.email }, function (err, user) {
+            if (err) {
+              reject(new Error("Server Error"));
+            }
+            if (user) {
+              reject(new Error("E-mail already in use"));
+            }
+            resolve(true);
+          });
         });
-      });
-    }),
-  //check username
-  check('username')
-    .not()
-    .isEmpty()
-    .withMessage('Username is required')
-    .custom((value, { req }) => {
-      return new Promise((resolve, reject) => {
-        User.findOne({ username: req.body.username }, function (err, user) {
-          if (err) {
-            reject(new Error('Server Error'))
-          }
-          if (Boolean(user)) {
-            reject(new Error('Username already in use'))
-          }
-          resolve(true)
+      }),
+    //check username
+    check("username")
+      .not()
+      .isEmpty()
+      .withMessage("Username is required")
+      .custom((value, { req }) => {
+        return new Promise((resolve, reject) => {
+          User.findOne({ username: req.body.username }, function (err, user) {
+            if (err) {
+              reject(new Error("Server Error"));
+            }
+            if (user) {
+              reject(new Error("Username already in use"));
+            }
+            resolve(true);
+          });
         });
+      }),
+  ],
+  async (req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
+    let fullname = req.body.password;
+    let email = req.body.email;
+    let age = req.body.age;
+
+    const validationErrors = validationResult(req);
+    let errors = [];
+    if (!validationErrors.isEmpty()) {
+      Object.keys(validationErrors.mapped()).forEach((field) => {
+        errors.push(validationErrors.mapped()[field]["msg"]);
       });
-    }),
+    }
 
-], async (req, res, next) => {
-  let username = req.body.username
-  let password = req.body.password
-  let fullname = req.body.password
-  let email = req.body.email
-  let age = req.body.age
+    if (errors.length) {
+      res.render("sign-up-form", {
+        errors: errors,
+      });
+    } else {
+      const user = new User({
+        username: username,
+        password: password,
+        fullname: fullname,
+        email: email,
+        age: age,
+      });
 
-  const validationErrors = validationResult(req);
-  let errors = [];
-  if (!validationErrors.isEmpty()) {
-    Object.keys(validationErrors.mapped()).forEach(field => {
-      errors.push(validationErrors.mapped()[field]['msg']);
-    });
+      bcrypt.hash(user.password, 10, (err, hashedPassword) => {
+        // if err, do something
+        if (err) {
+          console.log(err);
+        }
+        // otherwise, store hashedPassword in DB
+        else {
+          user.password = hashedPassword;
+          user.save();
+          res.redirect("/");
+        }
+      });
+    }
   }
-
-  if (errors.length) {
-    res.render('sign-up-form', {
-      errors: errors
-    });
-  } else {
-    const user = new User({
-      username: username,
-      password: password,
-      fullname: fullname,
-      email: email,
-      age: age,
-    })
-
-
-    bcrypt.hash(user.password, 10, (err, hashedPassword) => {
-      // if err, do something
-      if (err) {
-        console.log(err);
-      }
-      // otherwise, store hashedPassword in DB
-      else {
-        user.password = hashedPassword;
-        user.save()
-        res.redirect("/");
-      }
-    });
-
-  };
-});
+);
 
 //create new product
 router.get("/new", function (req, res) {
@@ -238,7 +232,6 @@ router.post("/new", async function (req, res) {
       console.log(e); // [Error]
     }
   } else {
-
     let newProduct = new product({
       name: req.body.name,
       description: req.body.description,
@@ -251,7 +244,7 @@ router.post("/new", async function (req, res) {
     });
     await newProduct.save();
     let user = await User.findOne({
-      _id: req.user._id
+      _id: req.user._id,
     });
     user.creations.push(newProduct);
     await user.save();
@@ -259,9 +252,8 @@ router.post("/new", async function (req, res) {
   }
 });
 
-
 router.get("/products", function (req, res) {
-  res.render("products")
+  res.render("products");
 });
 
 router.get("/product/:_id?", function (req, res) {
@@ -277,14 +269,13 @@ router.get("/product/:_id?", function (req, res) {
   });
 });
 
-router.get("/add-to-cart/:_id", function (req, res, next) {
+router.get("/add-to-cart/:_id", function (req, res) {
   var _id = req.params._id;
   var cart = new cartIm(req.session.cart ? req.session.cart : {});
 
   product.findById(_id, function (err, product) {
     if (err) {
       return res.redirect("/");
-      console.log(err);
     }
     //console.log(product, product._id);
     cart.add(product, product._id);
@@ -308,15 +299,7 @@ router.get("/add-to-cart/:_id", function (req, res, next) {
 
 // });
 
-router.post('/posts/:id/act', (req, res, next) => {
-  const action = req.body.action;
-  const counter = action === 'Like' ? 1 : -1;
-  Post.update({ _id: req.params.id }, { $inc: { likes: counter } }, {}, (err, numberAffected) => {
-    res.send('');
-  });
-});
-
-router.get("/cart", function (req, res, next) {
+router.get("/cart", function (req, res) {
   if (!req.session.cart) {
     return res.render("cart", { products: null });
   } else {
@@ -353,16 +336,16 @@ router.get("/:user?", async function (req, res) {
         currentUser: req.user,
       });
     }
-  })
+  });
 });
 
 router.get("/account/edit", async function (req, res) {
   res.render("accountEdit", {
-    user: req.user
-  })
-})
+    user: req.user,
+  });
+});
 
-router.use(function (req, res, next) {
+router.use(function (req, res) {
   res.status(404);
 
   // respond with html page

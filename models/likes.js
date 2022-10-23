@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 module.exports = function Cart(oldCart) {
   this.items = oldCart.items || {};
   this.totalQnty = oldCart.totalQnty || 0;

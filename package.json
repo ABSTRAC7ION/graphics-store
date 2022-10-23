@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "prettier": "npx prettier --write .",
+    "lint": "eslint **/*.js --fix"
   },
   "dependencies": {
     "algoliasearch": "^4.14.2",
@@ -26,7 +28,7 @@
     "mongoose": "^6.4.1",
     "mongoose-algolia": "^1.10.1",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.18",
+    "nodemon": "^2.0.20",
     "package-json": "^8.1.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
@@ -35,5 +37,13 @@
     "scss": "^0.2.4",
     "url": "^0.11.0",
     "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.25.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "2.7.1"
   }
 }
